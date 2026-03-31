@@ -6,8 +6,12 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+
 public class DriverFactory {
     public static WebDriver getDriver(String browser) {
+        WebDriverManager.firefoxdriver().setup(); // Đảm bảo FirefoxDriver được thiết lập
+        WebDriverManager.chromedriver().setup(); // Đảm bảo ChromeDriver được thiết lập
         boolean isCI = System.getenv("CI") != null;
         WebDriver driver;
         // Kiểm tra xem có đang chạy trên GitHub Actions không
