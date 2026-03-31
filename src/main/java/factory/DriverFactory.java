@@ -15,16 +15,12 @@ public class DriverFactory {
             ChromeOptions options = new ChromeOptions();
 
             // 🔥 Detect đang chạy trên CI (GitHub Actions)
-            String isCI = System.getenv("CI");
-
-            if (isCI != null) {
-                System.out.println("Running in CI → Headless mode");
-
+            boolean isCI = System.getenv("CI") != null; // GitHub Actions tự set CI=true
+            if (isCI) {
                 options.addArguments("--headless=new");
                 options.addArguments("--no-sandbox");
                 options.addArguments("--disable-dev-shm-usage");
-            } else {
-                System.out.println("Running in Local → Normal mode");
+                options.addArguments("--window-size=1920,1080");
             }
 
             driver = new ChromeDriver(options);
