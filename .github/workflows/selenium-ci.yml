@@ -5,13 +5,14 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch: # Cho phép bấm chạy bằng tay trên GitHub
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
     strategy:
-      fail-fast: false # Lỗi 1 browser thì browser kia vẫn chạy tiếp
+      fail-fast: false
       matrix:
         browser: [chrome, firefox]
 
@@ -24,14 +25,20 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: 'maven' # Cache thư viện để chạy nhanh hơn
+        cache: maven
+
+    # 🔥 CÀI FIREFOX (CHỈ KHI CẦN)
+    - name: Install Firefox
+      if: matrix.browser == 'firefox'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y firefox
 
     - name: Run Selenium Tests
-      # Truyền tên browser từ matrix vào biến của Maven
       run: mvn test -Dbrowser=${{ matrix.browser }} -DsuiteXmlFile=testng-smoke.xml
 
     - name: Upload Test Results
-      if: always() # Luôn upload dù test pass hay fail
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: test-results-${{ matrix.browser }}
